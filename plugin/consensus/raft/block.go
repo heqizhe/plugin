@@ -112,7 +112,6 @@ func (client *Client) Close() {
 func (client *Client) CreateBlock() {
 	issleep := true
 	retry := 0
-	infoflag := 0
 	count := 0
 
 	//打包区块前先同步到最大高度
@@ -127,28 +126,29 @@ func (client *Client) CreateBlock() {
 			panic("This node encounter problem, exit.")
 		}
 	}
+
 	ticker := time.NewTicker(50 * time.Millisecond)
+	hint := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
+	defer hint.Stop()
 	for {
 		select {
 		case <-client.ctx.Done():
+			return
+		case <-hint.C:
+			rlog.Info("==================This is Leader node=====================")
 		case <-ticker.C:
 			//如果leader节点突然挂了，不是打包节点，需要退出
 			if !mux.Load().(bool) {
 				rlog.Warn("I'm not the validator node anymore, exit.=============================")
 				break
 			}
-			infoflag++
-			if infoflag >= 3 {
-				rlog.Info("==================This is Leader node=====================")
-				infoflag = 0
-			}
+			time.Sleep(time.Second * time.Duration(writeBlockSeconds))
 			if issleep {
-				time.Sleep(10 * time.Second)
 				count++
 			}
-
-			if count >= 12 {
+			//create empty block every no tx in 120s
+			if count >= 120/int(writeBlockSeconds) {
 				rlog.Info("Create an empty block")
 				block := client.GetCurrentBlock()
 				emptyBlock := &types.Block{}
@@ -158,6 +158,7 @@ func (client *Client) CreateBlock() {
 				emptyBlock.Txs = nil
 				emptyBlock.TxHash = zeroHash[:]
 				emptyBlock.BlockTime = types.Now().Unix()
+				emptyBlock.Difficulty = types.GetP(0).PowLimitBits
 
 				entry := emptyBlock
 				client.propose(entry)
@@ -185,6 +186,8 @@ func (client *Client) CreateBlock() {
 			newblock.Height = lastBlock.Height + 1
 			client.AddTxsToBlock(&newblock, txs)
 			newblock.TxHash = merkle.CalcMerkleRoot(newblock.Txs)
+			//固定难度
+			newblock.Difficulty = types.GetP(0).PowLimitBits
 			newblock.BlockTime = types.Now().Unix()
 			if lastBlock.BlockTime >= newblock.BlockTime {
 				newblock.BlockTime = lastBlock.BlockTime + 1
@@ -197,7 +200,6 @@ func (client *Client) CreateBlock() {
 				rlog.Error(fmt.Sprintf("********************err:%v", err.Error()))
 				continue
 			}
-			time.Sleep(time.Second * time.Duration(writeBlockSeconds))
 		}
 
 	}
@@ -235,7 +237,6 @@ func (client *Client) readCommits(commitC <-chan *types.Block, errorC <-chan err
 
 //轮询任务，去检测本机器是否为validator节点，如果是，则执行打包任务
 func (client *Client) pollingTask() {
-
 	ticker := time.NewTicker(100 * time.Millisecond)
 	defer ticker.Stop()
 	for {
