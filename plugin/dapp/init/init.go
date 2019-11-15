@@ -16,6 +16,7 @@ import (
 	_ "github.com/33cn/plugin/plugin/dapp/norm"       //auto gen
 	_ "github.com/33cn/plugin/plugin/dapp/oracle"     //auto gen
 	_ "github.com/33cn/plugin/plugin/dapp/paracross"  //auto gen
+	_ "github.com/33cn/plugin/plugin/dapp/perpetual"  //auto gen
 	_ "github.com/33cn/plugin/plugin/dapp/pokerbull"  //auto gen
 	_ "github.com/33cn/plugin/plugin/dapp/privacy"    //auto gen
 	_ "github.com/33cn/plugin/plugin/dapp/relay"      //auto gen

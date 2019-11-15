@@ -3,6 +3,8 @@ module github.com/33cn/plugin
 go 1.12
 
 require (
+	dev.33.cn/33/btrade v0.0.0-00010101000000-000000000000
+	dev.33.cn/33/common v0.0.0-00010101000000-000000000000
 	github.com/33cn/chain33 v0.0.0-20191025150615-4180fe9f0aba
 	github.com/BurntSushi/toml v0.3.1
 	github.com/NebulousLabs/Sia v1.3.7
@@ -20,8 +22,6 @@ require (
 	github.com/golang-collections/collections v0.0.0-20130729185459-604e922904d3
 	github.com/golang/protobuf v1.3.2
 	github.com/hashicorp/golang-lru v0.5.0
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pkg/errors v0.8.0
 	github.com/prometheus/client_golang v1.1.0 // indirect
 	github.com/robertkrimen/otto v0.0.0-20180617131154-15f95af6e78d
@@ -39,4 +39,12 @@ require (
 	golang.org/x/time v0.0.0-20190921001708-c4c64cad1fd0 // indirect
 	google.golang.org/grpc v1.22.1
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
+)
+
+replace (
+	dev.33.cn/33/btrade => ../../../dev.33.cn/33/btrade
+	dev.33.cn/33/common => ../../../dev.33.cn/33/common
+	dev.33.cn/33/crypto => ../../../dev.33.cn/33/crypto
+	dev.33.cn/33/log => ../../../dev.33.cn/33/log
+	github.com/33cn/chain33 => ../../../github.com/33cn/chain33
 )
