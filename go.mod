@@ -3,8 +3,6 @@ module github.com/33cn/plugin
 go 1.12
 
 require (
-	dev.33.cn/33/btrade v0.0.0-00010101000000-000000000000
-	dev.33.cn/33/common v0.0.0-00010101000000-000000000000
 	github.com/33cn/chain33 v0.0.0-20191025150615-4180fe9f0aba
 	github.com/BurntSushi/toml v0.3.1
 	github.com/NebulousLabs/Sia v1.3.7
@@ -41,10 +39,4 @@ require (
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
 
-replace (
-	dev.33.cn/33/btrade => ../../../dev.33.cn/33/btrade
-	dev.33.cn/33/common => ../../../dev.33.cn/33/common
-	dev.33.cn/33/crypto => ../../../dev.33.cn/33/crypto
-	dev.33.cn/33/log => ../../../dev.33.cn/33/log
-	github.com/33cn/chain33 => ../../../github.com/33cn/chain33
-)
+replace github.com/33cn/chain33 => github.com/hxzqlh/chain33 v0.0.0-20191205091900-d39f789fea52
